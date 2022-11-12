@@ -14,4 +14,6 @@
 #
 #     $ conda deactivate
 
-# FInd the solution 
+# FInd the solution
+
+https://gist.github.com/a6a3uh/55188cce0876379cbc1040126ec45180
