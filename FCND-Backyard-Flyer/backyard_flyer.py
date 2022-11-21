@@ -23,8 +23,9 @@ class BackyardFlyer(Drone):
 
     def __init__(self, connection):
         super().__init__(connection)
+        self.target_altitude = 3.0
         self.target_position = np.array([0.0, 0.0, 0.0])
-        self.all_waypoints = self.calculate_box()
+        self.all_waypoints = self.calculate_box(squre_size = 10)
         self.in_mission = True
         self.check_state = {} # not used
 
@@ -48,11 +49,11 @@ class BackyardFlyer(Drone):
             altitude = -1.0 * self.local_position[2]
 
             # check if altitude is within 95% of target:
-            if altitude > 0.95 * self.target_position[2]:
+            if altitude > (0.95 * self.target_altitude):
                 self.waypoint_transition()
         if self.flight_state == States.WAYPOINT:
             # check if we are within a radius of the goal waypoint
-            if self.all_waypoints.size == 0:
+            if not self.all_waypoints:
                 # Wait till it finishes the lat point
                 if np.linalg.norm(self.target_position[0:2] - self.local_position[0:2]) < 0.3:
                     self.landing_transition()
@@ -68,7 +69,7 @@ class BackyardFlyer(Drone):
         This triggers when `MsgID.LOCAL_VELOCITY` is received and self.local_velocity contains new data
         """
         if self.flight_state == States.LANDING:
-            if((self.global_position[2]-self.global_home[2]) < 0.1) and (abs(self.local_position[2]) < 0.01):
+            if((self.global_position[2]-self.global_home[2]) < 0.1) and (abs(self.local_position[2]) < 0.1):
                 if(np.linalg.norm(self.local_velocity[0:2]) < 1.0):
                     self.disarming_transition()
 
@@ -91,16 +92,17 @@ class BackyardFlyer(Drone):
         else:
             return
 
-    def calculate_box(self):
+    def calculate_box(self, squre_size):
         """TODO: Fill out this method
 
         1. Return waypoints to fly a box
         """
-        p1 = np.array([0,0])
-        p2 = np.array([10,0])
-        p3 = np.array([10,10])
-        p4 = np.array([0,10])
-        waypoints = np.array([p1,p2,p3,p4,p1])
+        waypoints = [
+            (squre_size, 0, self.target_altitude, 0),
+            (squre_size, squre_size, self.target_altitude, 0),
+            (0, squre_size, self.target_altitude, 0),
+            (0, 0, self.target_altitude, 0)
+        ]
         return waypoints
     def arming_transition(self):
         """TODO: Fill out this method
@@ -127,9 +129,7 @@ class BackyardFlyer(Drone):
         3. Transition to the TAKEOFF state
         """
         print("takeoff transition")
-        target_altitude = 3.0
-        self.target_position[2]= target_altitude
-        self.takeoff(target_altitude)
+        self.takeoff(self.target_altitude)
         self.flight_state = States.TAKEOFF
 
     def waypoint_transition(self):
@@ -138,13 +138,13 @@ class BackyardFlyer(Drone):
         1. Command the next waypoint position
         2. Transition to WAYPOINT state
         """
-        self.target_position[0:2] = self.all_waypoints[0][0:2]
+        self.target_position = self.all_waypoints[0]
         self.cmd_position(self.target_position[0],
                             self.target_position[1],
                             self.target_position[2],
-                            0)
+                            self.target_position[3])
         # remove the previos waypoint
-        self.all_waypoints = np.delete(self.all_waypoints, 0, 0)
+        self.all_waypoints.pop(0)
         self.flight_state = States.WAYPOINT
 
     def landing_transition(self):
