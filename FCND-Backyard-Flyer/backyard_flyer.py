@@ -27,31 +27,6 @@ class BackyardFlyer(Drone):
         self.all_waypoints = self.calculate_box()
         self.in_mission = True
         self.check_state = {} # not used
-        # plot
-        self.t = 0
-        self.v = visdom.Visdom()
-        assert self.v.check_connection()
-                # default opens up to http://localhost:8097
-        self.v = visdom.Visdom()
-        assert self.v.check_connection()
-
-        # Plot NE
-        ne = np.array([self.local_position[0], self.local_position[1]]).reshape(1, -1)
-        self.ne_plot = self.v.scatter(ne, opts=dict(
-            title="Local position (north, east)",
-            xlabel='North',
-            ylabel='East'
-        ))
-
-        # Plot D
-        d = np.array([self.local_position[2]])
-        self.t = 0
-        self.d_plot = self.v.line(d, X=np.array([self.t]), opts=dict(
-            title="Altitude (meters)",
-            xlabel='Timestep',
-            ylabel='Down'
-        ))
-
 
         # initial state
         self.flight_state = States.MANUAL
@@ -60,8 +35,6 @@ class BackyardFlyer(Drone):
         self.register_callback(MsgID.LOCAL_POSITION, self.local_position_callback)
         self.register_callback(MsgID.LOCAL_VELOCITY, self.velocity_callback)
         self.register_callback(MsgID.STATE, self.state_callback)
-        self.register_callback(MsgID.LOCAL_POSITION, self.update_ne_plot)
-        self.register_callback(MsgID.LOCAL_POSITION, self.update_d_plot)
 
     def local_position_callback(self):
         """
@@ -81,9 +54,9 @@ class BackyardFlyer(Drone):
             # check if we are within a radius of the goal waypoint
             if self.all_waypoints.size == 0:
                 # Wait till it finishes the lat point
-                if np.linalg.norm(self.target_position[0:2] - self.local_position[0:2]) < 0.1:
+                if np.linalg.norm(self.target_position[0:2] - self.local_position[0:2]) < 0.3:
                     self.landing_transition()
-            elif np.linalg.norm(self.target_position[0:2] - self.local_position[0:2]) < 0.1:
+            elif np.linalg.norm(self.target_position[0:2] - self.local_position[0:2]) < 0.3:
                 self.waypoint_transition()
 
 
@@ -222,15 +195,6 @@ class BackyardFlyer(Drone):
         self.connection.start()
         print("Closing log file")
         self.stop_log()
-    def update_ne_plot(self):
-        ne = np.array([self.local_position[0], self.local_position[1]]).reshape(1, -1)
-        self.v.scatter(ne, win=self.ne_plot, update='append')
-    def update_d_plot(self):
-        d = np.array([self.local_position[2]])
-        # update timestep
-        self.t += 1
-        self.v.line(d, X=np.array([self.t]), win=self.d_plot, update='append')
-
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
