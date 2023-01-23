@@ -42,8 +42,8 @@ With respect to the `motion_planning.py`, this scripts contains a state machine 
 * DISARMING: This disarms the drone
 * PLANNING : This is the state that when reached implements the path planning algorithm that would be explained in more details below
 
-The current simple implementation, when the state enters into planning mode, computes the path that takes the robot from its current position to 10 meters in other the east and north direction forward. It does this with the a_star algorithm and the 2d grid configuration map created by the create grid function. See below an images of the path planned. 
-![Map of SF](./misc/basic_functionality.png)
+The current simple implementation, when the state enters into planning mode, computes the path that takes the robot from its current position to 10 meters in other the east and north direction forward. It does this with the a_star algorithm and the 2d grid configuration map created by the create grid function. See below an images of the path planned. It shows the path the robot follows. 
+![Map of SF](./misc/simple_path_planning.png)
 ### Implementing Your Path Planning Algorithm
 
 #### 1. Set your global home position
