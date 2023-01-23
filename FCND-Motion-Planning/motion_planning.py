@@ -65,7 +65,7 @@ class MotionPlanning(Drone):
             if -1.0 * self.local_position[2] > 0.95 * self.target_position[2]:
                 self.waypoint_transition()
         elif self.flight_state == States.WAYPOINT:
-            if np.linalg.norm(self.target_position[0:2] - self.local_position[0:2]) < self.compute_deadband_radius([0.1, 5], [0, DRONE_SPEED], self.local_velocity):
+            if np.linalg.norm(self.target_position[0:2] - self.local_position[0:2]) < self.compute_deadband_radius([0.5, 3], [0, DRONE_SPEED], self.local_velocity):
                 if len(self.waypoints) > 0:
                     self.waypoint_transition()
                 else:
@@ -174,8 +174,8 @@ class MotionPlanning(Drone):
 
  
         # TODO: convert to current local position using global_to_local()
-        east_local, west_local, down_local = global_to_local(current_global_position,self.global_home())
-        print("Current local position: east_local: {0}, west_local: {1}, down_local: {2}".format(east_local, west_local, down_local))
+        local_position_current_ = global_to_local(current_global_position,self.global_home)
+        print("Current local position: east_local: {0}, west_local: {1}, down_local: {2}".format(local_position_current_[0], local_position_current_[1], local_position_current_[2]))
         
         print('global home {0}, position {1}, local position {2}'.format(self.global_home, self.global_position,
                                                                          self.local_position))

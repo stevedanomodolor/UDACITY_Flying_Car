@@ -1,5 +1,5 @@
 ## Project: 3D Motion Planning
-![Quad Image](./misc/enroute.png)
+![Quad Image](./misc/Figure_1.png)
 
 ---
 
@@ -171,4 +171,5 @@ In order to accomplish this, first I found the velocity the drone travells. Whic
 DRONE_SPEED = 8.9 # Found experimentaly
 ```
 And at code line, I implement a function called "compute_deadband_radius(self, deadband_range, range_spead, local_velocity)" that does a linear conversion of the drone current velocity based on a predefined velocity range to a deadband radius based on a predefined deadband radius range. 
+
 
