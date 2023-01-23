@@ -174,7 +174,8 @@ class MotionPlanning(Drone):
 
  
         # TODO: convert to current local position using global_to_local()
-        # east_local, west_local, down_local = global_to_local(current_global_position,self.global_home())
+        east_local, west_local, down_local = global_to_local(current_global_position,self.global_home())
+        print("Current local position: east_local: {0}, west_local: {1}, down_local: {2}".format(east_local, west_local, down_local))
         
         print('global home {0}, position {1}, local position {2}'.format(self.global_home, self.global_position,
                                                                          self.local_position))
@@ -247,7 +248,7 @@ if __name__ == "__main__":
     parser.add_argument('--port', type=int, default=5760, help='Port number')
     parser.add_argument('--host', type=str, default='127.0.0.1', help="host address, i.e. '127.0.0.1'")
     parser.add_argument('--gps_goal_lat', type=float, default=37.794955, help="Goal lat")
-    parser.add_argument("-gps_goal_lon", type=float, default=-122.397962, help="Goal longitud")
+    parser.add_argument("--gps_goal_lon", type=float, default=-122.397962, help="Goal longitud")
     args = parser.parse_args()
     goal_ll[0] = args.gps_goal_lat
     goal_ll[1] = args.gps_goal_lon
