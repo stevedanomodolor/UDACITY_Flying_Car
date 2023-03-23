@@ -17,7 +17,6 @@ Regardless of your development platform, the first step is to download or clone 
 Once you have the code for the simulator, you will need to install the necessary compiler and IDE necessary for running the simulator.
 
 Here are the setup and install instructions for each of the recommended IDEs for each different OS options:
- dd
 ### Windows ###
 
 For Windows, the recommended IDE is Visual Studio.  Here are the steps required for getting the project up and running using Visual Studio.
