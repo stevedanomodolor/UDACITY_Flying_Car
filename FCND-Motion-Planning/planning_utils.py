@@ -110,7 +110,6 @@ def a_star(grid, h, start, goal):
 
     branch = {}
     found = False
-
     while not queue.empty():
         item = queue.get()
         current_node = item[1]
@@ -130,12 +129,10 @@ def a_star(grid, h, start, goal):
                 next_node = (current_node[0] + da[0], current_node[1] + da[1])
                 branch_cost = current_cost + action.cost
                 queue_cost = branch_cost + h(next_node, goal)
-
                 if next_node not in visited:
                     visited.add(next_node)
                     branch[next_node] = (branch_cost, current_node, action)
                     queue.put((queue_cost, next_node))
-
     if found:
         # retrace steps
         n = goal
@@ -188,4 +185,3 @@ def prune_path(path):
         else:
             i += 1
     return pruned_path
-        

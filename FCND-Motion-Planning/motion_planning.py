@@ -4,10 +4,7 @@ import msgpack
 from enum import Enum, auto
 import random
 import matplotlib.pyplot as plt
-
-
 import numpy as np
-
 from planning_utils import a_star, heuristic, create_grid, prune_path
 from udacidrone import Drone
 from udacidrone.connection import MavlinkConnection
@@ -203,7 +200,6 @@ class MotionPlanning(Drone):
         # include map offset
         grid_goal = (int(-north_offset+goal_local_position[0]), int(-east_offset+goal_local_position[1]))
         self.goal_position_ = grid_goal
-
         # Run A* to find a path from start to goal
         # TODO: add diagonal motions with a cost of sqrt(2) to your A* implementation
         # or move to a different search space such as a graph (not done here)
@@ -228,7 +224,6 @@ class MotionPlanning(Drone):
         self.waypoints = waypoints
         # TODO: send waypoints to sim (this is just for visualization of waypoints)
         self.send_waypoints()
-        
 
     def start(self):
         self.start_log("Logs", "NavLog.txt")
